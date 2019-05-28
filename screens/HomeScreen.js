@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import styled from "styled-components";
 import Card from "../components/Card";
@@ -79,6 +80,7 @@ class HomeScreen extends React.Component {
 
   componentDidMount() {
     StatusBar.setBarStyle("dark-content", true);
+    if (Platform.OS == "android") StatusBar.setBarStyle("light-content", true);
   }
 
   componentDidUpdate() {
@@ -152,7 +154,7 @@ class HomeScreen extends React.Component {
                   <Logo {...logo} key={index} />
                 ))}
               </ScrollView>
-              <Subtitle>Continue Learning</Subtitle>
+              <Subtitle>{"Continue Learning".toUpperCase()}</Subtitle>
               <ScrollView
                 horizontal={true}
                 style={{ paddingBottom: 30 }}
@@ -175,7 +177,11 @@ class HomeScreen extends React.Component {
                               });
                             }}
                           >
-                            <Card {...card} />
+                            <Card
+                              {...card}
+                              image={{ uri: card.image.url }}
+                              logo={{ uri: card.logo.url }}
+                            />
                           </TouchableOpacity>
                         ))}
                       </CardsContainer>
@@ -184,14 +190,11 @@ class HomeScreen extends React.Component {
                 </Query>
               </ScrollView>
               <Subtitle>Popular Courses</Subtitle>
-              <ScrollView
-                // style={{ padding: 20, paddingLeft: 0 }}
-                horizontal={true}
-              >
+              <CoursesContainer>
                 {courses.map((c, i) => (
                   <Course {...c} key={i} />
                 ))}
-              </ScrollView>
+              </CoursesContainer>
             </ScrollView>
           </SafeAreaView>
         </AnimatedContainer>
@@ -205,6 +208,11 @@ export default connect(
   mapDispatchToProps
 )(HomeScreen);
 
+const CoursesContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
 const Message = styled.Text`
   margin: 20px;
   color: #b8bece;
@@ -214,6 +222,7 @@ const Message = styled.Text`
 
 const CardsContainer = styled.View`
   flex-direction: row;
+  padding-left: 10px;
 `;
 
 const RootView = styled.View`

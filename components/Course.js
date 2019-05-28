@@ -1,23 +1,54 @@
 import React from "react";
 import styled from "styled-components";
+import { Dimensions } from "react-native";
 
-const Course = props => (
-  <Container>
-    <Cover>
-      <BackgroundImage source={props.backgroundImage} />
-      <Logo source={props.logo} />
-      <Caption>{props.caption}</Caption>
-      <Title>{props.title}</Title>
-    </Cover>
-    <Quote>
-      <Avatar source={props.avatar} />
-      <Wapper>
-        <Subtitle>{props.subtitle}</Subtitle>
-        <Taught>Taught by {props.tutor}</Taught>
-      </Wapper>
-    </Quote>
-  </Container>
-);
+const screenWidth = Dimensions.get("window").width;
+
+function getCourseWidth(screenWidth) {
+  let cardWidth = screenWidth - 40;
+  if (screenWidth >= 768) {
+    cardWidth = (screenWidth - 60) / 2;
+  }
+  if (screenWidth >= 1024) {
+    cardWidth = (screenWidth - 80) / 3;
+  }
+  return cardWidth;
+}
+
+class Course extends React.Component {
+  state = {
+    cardWidth: getCourseWidth(screenWidth)
+  };
+  componentDidMount() {
+    Dimensions.addEventListener("change", this.adaptLayout);
+  }
+
+  adaptLayout = dimensions => {
+    this.setState({
+      cardWidth: getCourseWidth(dimensions.window.width)
+    });
+  };
+
+  render() {
+    return (
+      <Container style={{ width: this.state.cardWidth }}>
+        <Cover>
+          <BackgroundImage source={this.props.backgroundImage} />
+          <Logo source={this.props.logo} />
+          <Caption>{this.props.caption}</Caption>
+          <Title>{this.props.title}</Title>
+        </Cover>
+        <Quote>
+          <Avatar source={this.props.avatar} />
+          <Wapper>
+            <Subtitle>{this.props.subtitle}</Subtitle>
+            <Taught>Taught by {this.props.tutor}</Taught>
+          </Wapper>
+        </Quote>
+      </Container>
+    );
+  }
+}
 
 export default Course;
 
@@ -27,6 +58,8 @@ const Container = styled.View`
   width: 335px;
   border-radius: 14px;
   margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 `;
