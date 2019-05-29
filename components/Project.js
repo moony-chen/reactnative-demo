@@ -1,18 +1,25 @@
 import React from "react";
 
 import styled from "styled-components";
+import { Animated } from "react-native";
 
 class Project extends React.Component {
+  state = {
+    cardWidth: new Animated.Value(315),
+    cardHeight: new Animated.Value(460)
+  };
   render() {
     return (
-      <Container>
+      <AnimatedContainer
+        style={{ width: this.state.width, height: this.state.height }}
+      >
         <Cover>
           <Image source={this.props.image} />
           <Title>{this.props.title}</Title>
           <Author>by {this.props.author}</Author>
         </Cover>
         <Text>{this.props.text}</Text>
-      </Container>
+      </AnimatedContainer>
     );
   }
 }
@@ -26,6 +33,8 @@ const Container = styled.View`
   background-color: white;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 `;
+
+const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
 const Cover = styled.View`
   height: 290;
